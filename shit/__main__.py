@@ -21,6 +21,9 @@ if __name__ == "__main__":
         print "No .shitignore found in current directory"
         sys.exit(1)
 
+    if not os.path.exists(".shit"):
+        os.mkdir(".shit")
+
     cwd = os.getcwd()
     shitignore_unused = set(shitignore.keys())
     for root, dirs, files in os.walk(cwd):
