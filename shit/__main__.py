@@ -25,6 +25,16 @@ if __name__ == "__main__":
         os.mkdir(".shit")
 
     cwd = os.getcwd()
+    shit = os.path.join(cwd, ".shit")
+
+    for root, dirs, files in os.walk(shit):
+        if root.startswith(os.path.join(shit, ".git")):
+            continue
+
+        for file in files:
+            if not os.path.exists(os.path.join(cwd, os.path.relpath(root, shit), file)):
+                os.unlink(os.path.join(shit, root, file))
+
     shitignore_unused = set(shitignore.keys())
     for root, dirs, files in os.walk(cwd):
         for i, dir in enumerate(dirs):
@@ -32,7 +42,7 @@ if __name__ == "__main__":
                 del dirs[i]
                 continue
 
-            target_dir = os.path.join(cwd, ".shit", os.path.relpath(root, cwd), dir)
+            target_dir = os.path.join(shit, os.path.relpath(root, cwd), dir)
             if not os.path.exists(target_dir):
                 os.makedirs(target_dir)
 
@@ -46,7 +56,7 @@ if __name__ == "__main__":
                     contents = contents.replace(k, v)
                     shitignore_unused.discard(k)
 
-            target_file = os.path.join(cwd, ".shit", os.path.relpath(root, cwd), file)
+            target_file = os.path.join(shit, os.path.relpath(root, cwd), file)
             open(target_file, "w").write(contents)
 
     if shitignore_unused:
